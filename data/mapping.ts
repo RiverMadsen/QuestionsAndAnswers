@@ -108,6 +108,7 @@ export async function initialize(container: HTMLDivElement, filter: string) {
     glPoints.addMany(pointGraphics)
     glLabels.addMany(labelGraphics)
     glLabels.minScale = 6000000
+    glPoints.minScale = 24000000
 
     if (app.view) {
         app.view.destroy()

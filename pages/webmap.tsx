@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { updateSelected } from '../features/plants/plantsSlice'
 
 async function loadMap(container: HTMLDivElement, filter: string) {
+    // debugger
     const { initialize } = await import('../data/mapping')
     return initialize(container, filter)
 }
@@ -22,6 +23,7 @@ const WebMap = () => {
     }, [type, dispatch])
 
     useEffect(() => {
+
         let asyncCleanup: Promise<(() => void)>
         if (mapRef.current && selected) {
             asyncCleanup = loadMap(mapRef.current, selected)

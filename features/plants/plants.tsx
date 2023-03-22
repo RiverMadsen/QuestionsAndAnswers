@@ -12,11 +12,13 @@ const fetcher = async (
     ...args: any[]
   ) => {
         const res = await fetch(input, init)
+        // const tempX = res.json()
+        // debugger
         return res.json()
     }
 
 const Plants = () => {
-    const { data, error } = useSWR('/api/powerplants', fetcher)
+    const { data, error } = useSWR('/api/questions', fetcher)
     const types = useAppSelector((state) => state.plants.types)
     const dispatch = useAppDispatch()
     const [isLoading, setLoading] = useState(true)
@@ -25,6 +27,7 @@ const Plants = () => {
     useEffect(() => {
         setLoading(true)
         if (data) {
+            // debugger
             dispatch(updateTypes(data.types))
             setLoading(false)
         }

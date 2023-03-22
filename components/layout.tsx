@@ -15,7 +15,7 @@ export default function Layout({ children }: any) {
     return (
         <>
             <Head>
-                <title>Power Plants Explorer</title>
+                <title>Questions and Answers</title>
             </Head>
             <div className={styles.layout}>
                 <header className={styles.header}>
