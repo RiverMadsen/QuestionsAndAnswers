@@ -9,11 +9,12 @@ const initialState: AppState = {
     types: []
 }
 
-export const plantsSlice = createSlice({
-    name: 'plants',
+export const menuSlice = createSlice({
+    name: 'menu',
     initialState,
     reducers: {
         updateTypes: (state, action) => {
+            // ebugger // xx
             state.types = action.payload
         },
         updateSelected: (state, action) => {
@@ -22,6 +23,6 @@ export const plantsSlice = createSlice({
     },
 })
 
-export const { updateTypes, updateSelected} = plantsSlice.actions
+export const { updateTypes, updateSelected} = menuSlice.actions
 
-export default plantsSlice.reducer
+export default menuSlice.reducer

@@ -3,7 +3,7 @@ import Layout from '../components/layout'
 import { ReactElement, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import { useAppSelector, useAppDispatch } from '../app/hooks'
-import { updateSelected } from '../features/plants/plantsSlice'
+import { updateSelected } from '../features/menu/menuSlice'
 
 async function loadMap(container: HTMLDivElement, filter: string) {
     // debugger
@@ -15,7 +15,7 @@ const WebMap = () => {
     const mapRef = useRef<HTMLDivElement>(null)
     const router = useRouter()
     const { type } = router.query
-    const selected = useAppSelector((state) => state.plants.selected)
+    const selected = useAppSelector(({store}) => store.menu.selected)
     const dispatch = useAppDispatch()
 
     useEffect(() => {

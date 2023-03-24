@@ -32,3 +32,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+
+REDUX FLOW
+
+With Redux, in order to manage state, you can "dispatch an action with a payload to update a slice of the store". That's a mouthful...lets have a deep dive into that sentence: 
+(1) DISPATCH - in plants.tsx, dispatch 

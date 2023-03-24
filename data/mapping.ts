@@ -114,13 +114,6 @@ export async function initialize(container: HTMLDivElement, filter: string) {
         app.view.destroy()
     }
 
-    // const layer = new FeatureLayer({
-    //     portalItem: {
-    //         id: '848d61af726f40d890219042253bedd7'
-    //     },
-    //     definitionExpression: `fuel1 = '${filter}'`
-    // })
-
 
     const map = new ArcGISMap({
         basemap: 'satellite',
@@ -153,16 +146,9 @@ export async function initialize(container: HTMLDivElement, filter: string) {
 
     view.when(async () => {
 
-        // await gl.when()
-
-        // const element = document.createElement('div')
-        // element.classList.add('esri-component', 'esri-widget', 'esri-widget--panel', 'item-description')
-        // element.innerHTML = layer.portalItem.description
-        // const expand = new Expand({
-        //     content: element,
-        //     expandIconClass: 'esri-icon-description'
-        // })
-        // view.ui.add(expand, 'bottom-right')
+        view.watch("extent", (x:any) => {
+            debugger;
+        })
     })
 
     app.map = map

@@ -1,9 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit'
-import plantsReducer from '../features/plants/plantsSlice'
+import menuReducer from '../features/menu/menuSlice'
+import mapReducer from '../features/map/mapSlice'
+import { combineReducers } from 'redux';
+
+const rootReducer = combineReducers({
+  map: mapReducer,
+  menu: menuReducer
+});
 
 const store = configureStore({
   reducer: {
-      plants: plantsReducer
+      store: rootReducer
   },
 })
 

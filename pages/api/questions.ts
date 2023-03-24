@@ -27,5 +27,5 @@ export default async function handler(
     .map((feature) => feature.attributes['fuel1'])
     .filter(Boolean)
     .sort()
-  res.status(200).json({ types: ['Biomass'] })
+  res.status(200).json({ types: ['Downloads', 'Biomass'] })
 }

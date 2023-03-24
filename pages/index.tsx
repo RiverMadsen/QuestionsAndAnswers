@@ -1,12 +1,12 @@
 import styles from '../styles/Home.module.css'
 import Layout from '../components/layout'
 import { ReactElement } from 'react'
-import Plants from '../features/plants/plants'
+import Menu from '../features/menu/menu'
 
 const Home = () => {
   return (
     <div className={styles.container}>
-      <Plants />
+      <Menu />
     </div>
   )
 }

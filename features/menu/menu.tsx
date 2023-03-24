@@ -2,7 +2,7 @@ import styles from '../../styles/Home.module.css'
 import useSWR from 'swr'
 import { useState, useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
-import { updateTypes } from './plantsSlice'
+import { updateTypes } from './menuSlice'
 import Loader from '../../components/loader'
 import { useRouter } from 'next/router'
 
@@ -10,16 +10,15 @@ const fetcher = async (
     input: RequestInfo,
     init: RequestInit,
     ...args: any[]
-  ) => {
-        const res = await fetch(input, init)
-        // const tempX = res.json()
-        // debugger
-        return res.json()
-    }
+) => {
+    const res = await fetch(input, init)
+    return res.json()
+}
 
-const Plants = () => {
+const Menu = (props: any) => {
     const { data, error } = useSWR('/api/questions', fetcher)
-    const types = useAppSelector((state) => state.plants.types)
+   
+    const types = useAppSelector(({store}) => store.menu.types )
     const dispatch = useAppDispatch()
     const [isLoading, setLoading] = useState(true)
     const router = useRouter()
@@ -27,7 +26,7 @@ const Plants = () => {
     useEffect(() => {
         setLoading(true)
         if (data) {
-            // debugger
+            // ebugger // xx
             dispatch(updateTypes(data.types))
             setLoading(false)
         }
@@ -39,21 +38,30 @@ const Plants = () => {
                 <Loader />
             </div>
         )
+    const handleMenuClick = (value: string) => {
+        if(value === 'Downloads'){
+            router.push(`/downloads`)
+        }
+        else{
+            router.push(`/webmap?type=${value}`)
+        }
+    }
+
     if (!types.length) return <p>No data</p>
 
     return (
         <ul className={styles.list}>
             {types.map((value, idx) => (
-            <li
-                className={styles.listItem}
-                key={`${value}-${idx}`}
-                onClick={() => router.push(`/webmap?type=${value}`)}
-            >
-                {value}
-            </li>
+                <li
+                    className={styles.listItem}
+                    key={`${value}-${idx}`}
+                    onClick={ () => handleMenuClick(value) }
+                >
+                    {value}
+                </li>
             ))}
         </ul>
     )
 }
 
-export default Plants
+export default Menu

@@ -6,8 +6,10 @@ import { useEffect, useState } from 'react'
 import styles from './layout.module.css'
 
 export default function Layout({ children }: any) {
+    console.log('layout')
+    console.log(children)
     const router = useRouter()
-    const selected = useAppSelector((state) => state.plants.selected)
+    const selected = useAppSelector(({store}) => store.menu.selected)
     const [showPrevious, setShowPrevious] = useState(false)
     useEffect(() => {
         setShowPrevious(router.asPath.includes('/webmap'))
