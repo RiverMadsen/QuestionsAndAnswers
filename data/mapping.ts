@@ -14,6 +14,7 @@ import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol'
 import LabelClass from '@arcgis/core/Layers/support/LabelClass'
 import TextSymbol from '@arcgis/core/symbols/TextSymbol'
 import Font from "@arcgis/core/symbols/Font.js"
+import { useGlobalContext } from '../components/Context/store'
 
 config.apiKey = process.env.NEXT_PUBLIC_API_KEY as string
 
@@ -30,7 +31,8 @@ const app: MapApp = {}
 let handler: IHandle
 
 
-export async function initialize(container: HTMLDivElement, filter: string) {
+export async function initialize(container: HTMLDivElement, filter: string, onViewChange: any) {
+    
     let i = 0;
     let coords: number[][] = []
     // coords.push([-125, 39])
@@ -141,15 +143,9 @@ export async function initialize(container: HTMLDivElement, filter: string) {
         () => view.stationary && view.extent,
         () => {
             app.savedExtent = view.extent.toJSON()
+            onViewChange(view.extent);
         }
     )
-
-    view.when(async () => {
-
-        view.watch("extent", (x:any) => {
-            debugger;
-        })
-    })
 
     app.map = map
     // app.layer = null
@@ -159,6 +155,7 @@ export async function initialize(container: HTMLDivElement, filter: string) {
 }
 
 function cleanup() {
+    //ebugger
     handler?.remove()
     app.view?.destroy()
 }

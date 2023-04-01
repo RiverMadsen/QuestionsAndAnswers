@@ -1,0 +1,12 @@
+.mainContent {
+    width: 100vw;
+    height: 30vh;
+    position: absolute;
+    bottom:0px;
+    background-color: black;
+    color:white;
+    border-top: 2px solid blue;
+    padding: 5px;
+    font-size: 18px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
