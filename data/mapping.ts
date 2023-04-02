@@ -15,7 +15,7 @@ import LabelClass from '@arcgis/core/Layers/support/LabelClass'
 import TextSymbol from '@arcgis/core/symbols/TextSymbol'
 import Font from "@arcgis/core/symbols/Font.js"
 import { useGlobalContext } from '../components/Context/store'
-
+import { getFromCollection } from './indexedDB'
 import BaseTileLayer from '@arcgis/core/layers/BaseTileLayer'
 import LayerList from '@arcgis/core/widgets/LayerList'
 import esriRequest from '@arcgis/core/request'
@@ -48,7 +48,7 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
         },
 
         // generate the tile url for a given level, row and column
-        getTileUrl: function (level:number, row:number, col:number) {
+        getTileUrl: function (level: number, row: number, col: number) {
             return this.urlTemplate
                 .replace("{z}", level)
                 .replace("{x}", col)
@@ -56,7 +56,7 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
         },
         // This method fetches tiles for the specified level and size.
         // Override this method to process the data returned from the server.
-        fetchTile: function (level:number, row:number, col:number, options: any) {
+        fetchTile: function (level: number, row: number, col: number, options: any) {
             // call getTileUrl() method to construct the URL to tiles
             // for a given level, row and col provided by the LayerView
             const url = this.getTileUrl(level, row, col);
@@ -64,7 +64,8 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
             // request for tiles based on the generated url
             // the signal option ensures that obsolete requests are aborted
 
-            
+            return getTile(`T_${level}_${row}_${col}`);
+
             return esriRequest(url, {
                 responseType: "image",
                 signal: options && options.signal
@@ -79,7 +80,7 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
                     // create a canvas with 2D rendering context
                     const canvas = document.createElement("canvas");
                     const context = canvas.getContext("2d");
-                    if(context == null){
+                    if (context == null) {
                         return
                     }
                     canvas.width = width;
@@ -107,6 +108,48 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
             );
         }
     });
+
+    function getTile(tileToGet: string): Promise<HTMLCanvasElement> {
+        const tilePromise = new Promise<HTMLCanvasElement>((resolve, reject) => {
+            const canvas = document.createElement("canvas");
+            canvas.width = 256
+            canvas.height = 256
+            getFromCollection('common_lowResMaps', tileToGet, (data) => {
+                const image = new Image();
+                if(data){
+                    image.src = data.Value
+                    image.onload = function () {
+                        const context = canvas.getContext("2d");
+                        context.drawImage(image, 0, 0, 256, 256);
+                        resolve(canvas)
+                    }
+                }
+                else{
+                    console.log("Missing: " + tileToGet)
+                }
+            })
+            //reject(canvas)   4.36 + 2.49
+        })
+        return tilePromise;
+    }
+        //     getFromCollection('common_lowResMaps', tileToGet, (data) => {
+        //         const image = new Image();
+        //         //ebugger
+        //         image.src = data.Value
+        //         image.onload = function () {
+        //             // draw the image on the canvas
+        //             const canvas = document.getElementById("myCanvas");
+        //             canvas.width = 256
+        //             canvas.height = 256
+        //             const context = canvas.getContext("2d");
+        //             context.drawImage(image, 0, 0, 256, 256);
+        //             resolve(canvas)
+        //         }
+        //     }
+        // })
+        // return tilePromise;
+    //}
+
 
     const stamenTileLayer = new TintLayer({
         urlTemplate: "https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png",
@@ -220,13 +263,13 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
 
     // })
     const map = new ArcGISMap({
-        layers: [stamenTileLayer,glLine, glPoints, glLabels]
+        layers: [stamenTileLayer, glLine, glPoints, glLabels]
     });
 
     const view = new MapView({
         map,
         container,
-        zoom: 3,
+        zoom: 1,
         center: [-100, 39]
     })
 
