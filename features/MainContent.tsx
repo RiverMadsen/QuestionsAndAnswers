@@ -1,11 +1,12 @@
 import styles from '../styles/MainContent.module.css'
 import Layout from '../components/layout'
 import { ReactElement } from 'react'
-
 import { useRouter } from 'next/router'
 import WebMap from '../pages/webmap' //pages\webmap.tsx
 import { useState, useEffect } from 'react'
 import { initDatabase, putToCollection, getFromCollection } from '../data/indexedDB'
+import JSZip from 'jszip';
+
 
 const MainContent = () => {
 
@@ -29,7 +30,7 @@ const MainContent = () => {
       //ebugger
       image.src = data.Value
 
-      image.onload = function() {
+      image.onload = function () {
         // draw the image on the canvas
         const canvas = document.getElementById("myCanvas");
         canvas.width = 256
@@ -39,6 +40,23 @@ const MainContent = () => {
       };
     })
   }
+
+  const handleFileInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if(event.target && event.target.files){
+      const file = event.target.files[0];
+      if (file && file.type.toString().includes('application') && file.type.toString().includes('zip')) {
+        console.log("we have a zip")
+        //debugger
+        const zip = await JSZip.loadAsync(file);
+        const text = await zip.file('tiles.json')?.async('text');
+        putToCollection("highResMaps", JSON.parse(text), (args) => {
+          console.log(args)
+        })
+      }
+    }
+  }
+
+
   const downloadTiles = () => {
     //console.log("download")
     const downloadJsonFile = async () => {
@@ -56,12 +74,12 @@ const MainContent = () => {
     <>
       {/* <WebMap></WebMap> */}
       <div className={styles.mainContent}>
-        <div>(1) Initialize the daatabase to hold topographic maps: <br></br>
+        <div>(1) Initialize the database to hold topographic maps: <br></br>
           <button onClick={initDB}>
             Initialize Database
           </button>
         </div>
-        <div>(2) Download topographic basemap tiles and load into database <br></br>
+        <div>(2) Download satellite imagery tiles and load into database <br></br>
           <button onClick={downloadTiles}>
             Download Tiles
           </button>
@@ -72,6 +90,13 @@ const MainContent = () => {
           </button><br>
           </br>
           <canvas id="myCanvas" className={styles.testCanvas}></canvas>
+        </div>
+        <div>(4) Unzip contents of high-res file and push to indexedDB <br></br>
+          <div>
+            <input type="file" accept=".zip" onChange={handleFileInputChange} />
+          </div>
+          <br>
+          </br>
         </div>
         END OF FILE
       </div>

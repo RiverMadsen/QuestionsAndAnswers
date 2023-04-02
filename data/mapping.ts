@@ -64,7 +64,7 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
             // request for tiles based on the generated url
             // the signal option ensures that obsolete requests are aborted
 
-            return getTile(`T_${level}_${row}_${col}`);
+            return getTile(`T_${level}_${row}_${col}`, level);
 
             return esriRequest(url, {
                 responseType: "image",
@@ -109,12 +109,13 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
         }
     });
 
-    function getTile(tileToGet: string): Promise<HTMLCanvasElement> {
+    function getTile(tileToGet: string, level: number): Promise<HTMLCanvasElement> {
         const tilePromise = new Promise<HTMLCanvasElement>((resolve, reject) => {
             const canvas = document.createElement("canvas");
             canvas.width = 256
             canvas.height = 256
-            getFromCollection('common_lowResMaps', tileToGet, (data) => {
+            let storeName = level < 11 ? 'common_lowResMaps' : 'highResMaps' 
+            getFromCollection(storeName, tileToGet, (data) => {
                 const image = new Image();
                 if(data){
                     image.src = data.Value
