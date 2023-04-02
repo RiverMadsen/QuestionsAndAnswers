@@ -16,14 +16,11 @@ const MainContent = () => {
 
   const router = useRouter();
   useEffect(() => {
-    router.push('/webmap?type=coal');
+    router.push('/webmap?page=home');
   }, []);
 
 
 
-  const handleClick = () => {
-    router.push('/webmap?type=coal');
-  };
   return (
     <>
       {/* <WebMap></WebMap> */}
