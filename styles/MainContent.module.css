@@ -9,4 +9,10 @@
     padding: 5px;
     font-size: 18px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    overflow-y: scroll;
+}
+.testCanvas {
+    /* width: 256px;
+    height: 256px;
+    border:2px solid red; */
 }

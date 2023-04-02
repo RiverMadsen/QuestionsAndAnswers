@@ -16,6 +16,11 @@ import TextSymbol from '@arcgis/core/symbols/TextSymbol'
 import Font from "@arcgis/core/symbols/Font.js"
 import { useGlobalContext } from '../components/Context/store'
 
+import BaseTileLayer from '@arcgis/core/layers/BaseTileLayer'
+import LayerList from '@arcgis/core/widgets/LayerList'
+import esriRequest from '@arcgis/core/request'
+import Color from '@arcgis/core/Color'
+
 config.apiKey = process.env.NEXT_PUBLIC_API_KEY as string
 
 interface MapApp {
@@ -32,7 +37,99 @@ let handler: IHandle
 
 
 export async function initialize(container: HTMLDivElement, filter: string, onViewChange: any) {
-    
+
+    const TintLayer = BaseTileLayer.createSubclass({
+        properties: {
+            urlTemplate: null,
+            tint: {
+                value: null,
+                type: Color
+            }
+        },
+
+        // generate the tile url for a given level, row and column
+        getTileUrl: function (level:number, row:number, col:number) {
+            return this.urlTemplate
+                .replace("{z}", level)
+                .replace("{x}", col)
+                .replace("{y}", row);
+        },
+        // This method fetches tiles for the specified level and size.
+        // Override this method to process the data returned from the server.
+        fetchTile: function (level:number, row:number, col:number, options: any) {
+            // call getTileUrl() method to construct the URL to tiles
+            // for a given level, row and col provided by the LayerView
+            const url = this.getTileUrl(level, row, col);
+            console.log(`T_${level}_${row}_${col}`)
+            // request for tiles based on the generated url
+            // the signal option ensures that obsolete requests are aborted
+
+            
+            return esriRequest(url, {
+                responseType: "image",
+                signal: options && options.signal
+            }).then(
+                function (response: any) {
+                    // when esri request resolves successfully
+                    // get the image from the response
+                    const image = response.data;
+                    const width = this.tileInfo.size[0];
+                    const height = this.tileInfo.size[0];
+
+                    // create a canvas with 2D rendering context
+                    const canvas = document.createElement("canvas");
+                    const context = canvas.getContext("2d");
+                    if(context == null){
+                        return
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    // Apply the tint color provided by
+                    // by the application to the canvas
+                    if (this.tint) {
+                        // Get a CSS color string in rgba form
+                        // representing the tint Color instance.
+                        context.fillStyle = this.tint.toCss();
+                        context.fillRect(0, 0, width, height);
+
+                        // Applies "difference" blending operation between canvas
+                        // and steman tiles. Difference blending operation subtracts
+                        // the bottom layer (canvas) from the top layer (tiles) or the
+                        // other way round to always get a positive value.
+                        context.globalCompositeOperation = "difference";
+                    }
+                    // Draw the blended image onto the canvas.
+                    context.drawImage(image, 0, 0, width, height);
+
+                    return canvas;
+                }.bind(this)
+            );
+        }
+    });
+
+    const stamenTileLayer = new TintLayer({
+        urlTemplate: "https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png",
+        tint: new Color("#004FBB"),
+        title: "Stamen Toner"
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     let i = 0;
     let coords: number[][] = []
     // coords.push([-125, 39])
@@ -71,7 +168,7 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
             geometry: pnt,
             symbol: sms,
         })
-        const ts = new TextSymbol ({
+        const ts = new TextSymbol({
             color: "white",
             haloColor: "black",
             haloSize: "1px",
@@ -117,11 +214,14 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
     }
 
 
-    const map = new ArcGISMap({
-        basemap: 'satellite',
-        layers: [glLine, glPoints, glLabels],
+    // const map = new ArcGISMap({
+    //     basemap: 'satellite',
+    //     layers: [glLine, glPoints, glLabels],
 
-    })
+    // })
+    const map = new ArcGISMap({
+        layers: [stamenTileLayer,glLine, glPoints, glLabels]
+    });
 
     const view = new MapView({
         map,
