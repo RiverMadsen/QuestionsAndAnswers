@@ -20,3 +20,7 @@ a {
 .item-description {
   padding: 1rem;
 }
+
+.esri-zoom {
+  display: none;
+}

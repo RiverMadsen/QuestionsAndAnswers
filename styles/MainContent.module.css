@@ -1,15 +1,14 @@
 .mainContent {
-    width: 100vw;
-    height: 30vh;
+    /* width: 100vw;
+    height: 30vh; */
     position: absolute;
-    bottom:0px;
-    background-color: black;
+    top:0px;
+    background-color: transparent;
     color:white;
-    border-top: 2px solid blue;
     padding: 5px;
     font-size: 18px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
 }
 .testCanvas {
     /* width: 256px;

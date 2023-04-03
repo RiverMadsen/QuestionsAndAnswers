@@ -23,12 +23,15 @@
 
 .header {
     position: sticky;
+    display: none !important;
     top: 0;
     z-index: 999;
     background-color: var(--calcite-ui-brand);
     color: var(--calcite-ui-foreground-1);
     display: flex;
     padding-left:5px;
+    height: 40px;
+    opacity: .5;
     /* grid-template-columns: repeat(2, auto); */
     align-items: center;
     /* justify-content: space-between; */
