@@ -11,7 +11,7 @@ import Polyline from '@arcgis/core/geometry/Polyline'
 import Point from '@arcgis/core/geometry/Point'
 import SimpleLineSymbol from '@arcgis/core/symbols/SimpleLineSymbol'
 import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol'
-import LabelClass from '@arcgis/core/Layers/support/LabelClass'
+//import LabelClass from '@arcgis/core/Layers/support/LabelClass'
 import TextSymbol from '@arcgis/core/symbols/TextSymbol'
 import Font from "@arcgis/core/symbols/Font.js"
 import { useGlobalContext } from '../components/Context/store'
