@@ -74,7 +74,7 @@ const MainContent = () => {
       const data = await response.json();
 
       putToCollection('common_lowResMaps', data, (args: any) => {
-        console.log(args)
+        alert(args)
       })
 
     }
@@ -84,24 +84,24 @@ const MainContent = () => {
     <>
       {/* <WebMap></WebMap> */}
       <div className={styles.mainContent}>
-        <div>(1) Initialize the database to hold topographic maps: <br></br>
+        {/* <div>(1) Initialize the database to hold topographic maps: <br></br>
           <button onClick={initDB}>
             Initialize Database
           </button>
-        </div>
-        <div>(2) Download satellite imagery tiles and load into database <br></br>
+        </div> */}
+        <div>(1) Download satellite imagery tiles and load into database <br></br>
           <button onClick={downloadTiles}>
             Download Tiles
           </button>
         </div>
-        <div>(3) View Image stored in database in a canvas <br></br>
+        <div>(2) View Image stored in database in a canvas <br></br>
           <button onClick={viewImage}>
             View Image
           </button><br>
           </br>
           <canvas id="myCanvas" className={styles.testCanvas}></canvas>
         </div>
-        <div>(4) Unzip contents of high-res file and push to indexedDB <br></br>
+        <div>(3) Unzip contents of high-res file and push to indexedDB <br></br>
           <div>
             <input type="file" accept=".zip" onChange={handleFileInputChange} />
           </div>
