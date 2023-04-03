@@ -94,6 +94,24 @@ function upgradeDatabase(event) {
     }
 
 }
+export function clearCollection(store: string,  onSuccesss: (data: any) => {}) {
+    const openRequest = indexedDB.open(DB_NAME, DB_VERSION);
+    openRequest.onsuccess = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains(store)) {
+            return
+        }
+        const transaction = db.transaction([store], "readwrite");
+        const objectStore = transaction.objectStore(store);
+        const clearRequest = objectStore.clear();
+        clearRequest.onsuccess = () => {
+            //debugger
+            onSuccesss("store cleared")
+        }
+    }
+}
+
+
 export function getFromCollection(store: string, id: string, onSuccesss: (data: any) => {}) {
     const openRequest = indexedDB.open(DB_NAME, DB_VERSION);
     openRequest.onupgradeneeded = (event) => {

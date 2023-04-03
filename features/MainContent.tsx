@@ -4,7 +4,7 @@ import { ReactElement } from 'react'
 import { useRouter } from 'next/router'
 import WebMap from '../pages/webmap' //pages\webmap.tsx
 import { useState, useEffect } from 'react'
-import { initDatabase, putToCollection, getFromCollection } from '../data/indexedDB'
+import { initDatabase, putToCollection, getFromCollection, clearCollection } from '../data/indexedDB'
 import JSZip from 'jszip';
 
 
@@ -45,13 +45,17 @@ const MainContent = () => {
     if(event.target && event.target.files){
       const file = event.target.files[0];
       if (file && file.type.toString().includes('application') && file.type.toString().includes('zip')) {
-        console.log("we have a zip")
-        //debugger
-        const zip = await JSZip.loadAsync(file);
-        const text = await zip.file('tiles.json')?.async('text');
-        putToCollection("highResMaps", JSON.parse(text), (args) => {
-          console.log(args)
+        clearCollection('highResMaps', async () => {
+          console.log("collection cleared!!!")
+          console.log("we have a zip")
+          //debugger
+          const zip = await JSZip.loadAsync(file);
+          const text = await zip.file('tiles.json')?.async('text');
+          putToCollection("highResMaps", JSON.parse(text), (args) => {
+            console.log(args)
+          })
         })
+
       }
     }
   }
