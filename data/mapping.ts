@@ -21,7 +21,7 @@ import LayerList from '@arcgis/core/widgets/LayerList'
 import esriRequest from '@arcgis/core/request'
 import Color from '@arcgis/core/Color'
 
-config.apiKey = process.env.NEXT_PUBLIC_API_KEY as string
+// config.apiKey = process.env.NEXT_PUBLIC_API_KEY as string
 
 interface MapApp {
     view?: MapView;
@@ -38,7 +38,7 @@ let handler: IHandle
 
 export async function initialize(container: HTMLDivElement, filter: string, onViewChange: any) {
 
-    const TintLayer = BaseTileLayer.createSubclass({
+    const TintLayer = (BaseTileLayer as any).createSubclass({
         properties: {
             urlTemplate: null,
             tint: {
@@ -65,7 +65,7 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
             // the signal option ensures that obsolete requests are aborted
 
             return getTile(`T_${level}_${row}_${col}`, level);
-
+            /*
             return esriRequest(url, {
                 responseType: "image",
                 signal: options && options.signal
@@ -105,7 +105,7 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
 
                     return canvas;
                 }.bind(this)
-            );
+            );*/
         }
     });
 
@@ -121,6 +121,9 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
                     image.src = data.Value
                     image.onload = function () {
                         const context = canvas.getContext("2d");
+                        if(!context){
+                            return
+                        }
                         context.drawImage(image, 0, 0, 256, 256);
                         resolve(canvas)
                     }

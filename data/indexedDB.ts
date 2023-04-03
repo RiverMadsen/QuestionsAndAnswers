@@ -10,7 +10,7 @@ export function initDatabase() {
         upgradeDatabase(event)
     };
 }
-function upgradeDatabase(event) {
+function upgradeDatabase(event: any) {
 
     if (!event || !event.target) {
         return;
@@ -97,7 +97,10 @@ function upgradeDatabase(event) {
 export function clearCollection(store: string,  onSuccesss: (data: any) => {}) {
     const openRequest = indexedDB.open(DB_NAME, DB_VERSION);
     openRequest.onsuccess = (event) => {
-        const db = event.target.result;
+        if(!event.target){
+            return
+        }
+        const db = (event.target as any).result;
         if (!db.objectStoreNames.contains(store)) {
             return
         }
@@ -112,20 +115,23 @@ export function clearCollection(store: string,  onSuccesss: (data: any) => {}) {
 }
 
 
-export function getFromCollection(store: string, id: string, onSuccesss: (data: any) => {}) {
+export function getFromCollection(store: string, id: string, onSuccesss: (data: any) => void) {
     const openRequest = indexedDB.open(DB_NAME, DB_VERSION);
     openRequest.onupgradeneeded = (event) => {
         upgradeDatabase(event)
     };
     openRequest.onsuccess = (event) => {
-        const db = event.target.result;
+        if(!event.target){
+            return;
+        }
+        const db = (event.target as any).result;
         if (!db.objectStoreNames.contains(store)) {
             return
         }
         const transaction = db.transaction([store]);
         const objectStore = transaction.objectStore(store);
         const request = objectStore.get(id);
-        request.onsuccess = (event) => {
+        request.onsuccess = (event: any) => {
             onSuccesss(event.target.result)
         }
     }

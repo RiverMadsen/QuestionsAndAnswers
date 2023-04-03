@@ -30,7 +30,7 @@ const WebMap = () => {
     // When this page first executes, it gets the argument from the route URL. 
     useEffect(() => {
         //ebugger
-        setSelected(type.toString())
+        setSelected((type as string).toString())
     }, [type])
 
     const onExtentChange = (x: any) => {

@@ -32,10 +32,16 @@ const MainContent = () => {
 
       image.onload = function () {
         // draw the image on the canvas
-        const canvas = document.getElementById("myCanvas");
+        const canvas = document.getElementById("myCanvas") as HTMLCanvasElement;
+        if(!canvas){
+          return
+        }
         canvas.width = 256
         canvas.height = 256
         const context = canvas.getContext("2d");
+        if(!context){
+          return
+        }
         context.drawImage(image, 0, 0, 256, 256);
       };
     })
@@ -51,7 +57,7 @@ const MainContent = () => {
           //debugger
           const zip = await JSZip.loadAsync(file);
           const text = await zip.file('tiles.json')?.async('text');
-          putToCollection("highResMaps", JSON.parse(text), (args) => {
+          putToCollection("highResMaps", JSON.parse((text as string)), (args) => {
             console.log(args)
           })
         })
