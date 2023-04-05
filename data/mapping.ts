@@ -273,7 +273,7 @@ export async function initialize(container: HTMLDivElement, filter: string, onVi
     const view = new MapView({
         map,
         container,
-        zoom: 1,
+        zoom: 2,
         center: [-100, 39]
     })
 
