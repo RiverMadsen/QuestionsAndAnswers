@@ -15,3 +15,11 @@
     height: 256px;
     border:2px solid red; */
 }
+.highres{
+    color:white;
+    font-weight: bold;
+    font-size: 14px;
+}
+.btn {
+    margin-right: 10px;
+}

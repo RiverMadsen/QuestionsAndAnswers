@@ -17,9 +17,10 @@ const MainContent = () => {
   //const handleClick = () => {
 
   const router = useRouter();
+  let downloadedTiles = false
   useEffect(() => {
     router.push('/webmap?page=home');
-    downloadTiles();
+
   }, []);
 
   const initDB = () => {
@@ -34,13 +35,13 @@ const MainContent = () => {
       image.onload = function () {
         // draw the image on the canvas
         const canvas = document.getElementById("myCanvas") as HTMLCanvasElement;
-        if(!canvas){
+        if (!canvas) {
           return
         }
         canvas.width = 256
         canvas.height = 256
         const context = canvas.getContext("2d");
-        if(!context){
+        if (!context) {
           return
         }
         context.drawImage(image, 0, 0, 256, 256);
@@ -49,7 +50,12 @@ const MainContent = () => {
   }
 
   const handleFileInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if(event.target && event.target.files){
+    if (downloadedTiles === false) {
+      downloadedTiles = true
+      downloadTiles()
+      return
+    }
+    if (event.target && event.target.files) {
       const file = event.target.files[0];
       if (file && file.type.toString().includes('application') && file.type.toString().includes('zip')) {
         clearCollection('highResMaps', async () => {
@@ -90,11 +96,13 @@ const MainContent = () => {
             Initialize Database
           </button>
         </div> */}
-        {/* <div>(1) Download satellite imagery tiles and load into database <br></br> */}
-          {/* <button onClick={downloadTiles}>
-            Get Low-Res Tiles
-          </button> */}
-        {/* </div> */}
+        <button className={styles.btn}  onClick={initDB}>
+          Initialize Database
+        </button>
+        <button onClick={downloadTiles}>
+          Get Low-Res Tiles
+        </button>
+        {/* </div>
         {/* <div>(2) View Image stored in database in a canvas <br></br>
           <button onClick={viewImage}>
             View Image
@@ -104,8 +112,8 @@ const MainContent = () => {
         </div> */}
         {/* <div>(3) Unzip contents of high-res file and push to indexedDB <br></br>
           <div> */}
-            <input type="file" accept=".zip" onChange={handleFileInputChange} />
-          {/* </div>
+        <br></br><span className={styles.highres}>Get High-Res Maps: </span><input className={styles.btn} type="file" accept=".zip" onChange={handleFileInputChange} />
+        {/* </div>
           <br>
           </br> */}
         {/* </div> */}
